@@ -1,27 +1,26 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = 'omkarsatav/calculator:latest'
-        GITHUB_REPO_URL = 'https://github.com/OmkarSatav/ScientificCalculator.git'
+        IMAGE_NAME = 'omkarsatav/calculator:latest'
+        GITHUB_REPOSITORY = 'https://github.com/OmkarSatav/ScientificCalculator.git'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
                 script {
-                    // Clone the repository
-                    git branch: 'master', url: "${GITHUB_REPO_URL}"
+                    git branch: 'master', url: "${GITHUB_REPOSITORY}"
                 }
             }
         }
 
-        stage('Build') {
+        stage('Build Application') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean install -DskipTests'
             }
         }
 
-        stage('Run Tests') {
+        stage('Execute Unit Tests') {
             steps {
                 script {
                     sh "mvn test"
@@ -29,33 +28,33 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Create Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t $DOCKER_IMAGE .'
+                    sh 'docker build -t $IMAGE_NAME .'
                 }
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Image to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     script {
-                        def loginStatus = sh(script: 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin', returnStatus: true)
+                        def loginStatus = sh(script: 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin', returnStatus: true)
                         if (loginStatus != 0) {
-                            error("❌ Docker login failed. Check credentials and try again.")
+                            error("🔴 Docker login failed. Please check your credentials.")
                         }
 
-                        def pushStatus = sh(script: 'docker push $DOCKER_IMAGE', returnStatus: true)
+                        def pushStatus = sh(script: 'docker push $IMAGE_NAME', returnStatus: true)
                         if (pushStatus != 0) {
-                            error("❌ Docker image push failed. Check DockerHub repository permissions.")
+                            error("🔴 Docker image push failed. Please check repository permissions on Docker Hub.")
                         }
                     }
                 }
             }
         }
 
-        stage('Deploy with Ansible') {
+        stage('Ansible Deployment') {
             steps {
                 script {
                     ansiblePlaybook(
@@ -71,17 +70,17 @@ pipeline {
         success {
             emailext(
                 to: 'omkarsatav2021.comp@mmcoe.edu.in',
-                subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """<p>The build and deployment were <b>successful!</b></p>
-                         <p>Check the build details: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>"""
+                subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """<p>Your build and deployment have been <strong>successful</strong>!</p>
+                         <p>Click the following link to view the build details: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>"""
             )
         }
         failure {
             emailext(
-                to: 'iam49smith@gmail.com',
-                subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """<p>The build or deployment <b>failed!</b></p>
-                         <p>Check the build details: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>"""
+                to: 'omkarsatav2021.comp@mmcoe.edu.in',
+                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """<p>Unfortunately, the build or deployment <strong>failed</strong>.</p>
+                         <p>For more details, visit: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>"""
             )
         }
         always {
