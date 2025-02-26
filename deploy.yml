@@ -19,5 +19,10 @@
         name: docker
         state: started
 
+    - name: Remove existing container if it exists
+      command: docker rm -f scientific_calculator
+      ignore_errors: yes
+
     - name: Running container
-      shell: docker run -it -d --name scientific_calculator -p 9090:8080 omkarsatav/scientific_calculator
+      command: docker run -it -d --name scientific_calculator_{{ ansible_date_time.epoch }} -p 9090:8080 omkarsatav/scientific_calculator
+
