@@ -10,7 +10,7 @@ public class ScientificCalculatorTest {
     @Test
     public void testSquareRoot() {
 
-        assertEquals(4.0, ScientificCalculator.squareRoot(9.0), 0.001);
+        assertEquals(3.0, ScientificCalculator.squareRoot(9.0), 0.001);
         assertThrows(IllegalArgumentException.class, () -> ScientificCalculator.squareRoot(-4.0));
     }
 
