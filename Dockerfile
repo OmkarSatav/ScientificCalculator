@@ -1,26 +1,17 @@
-FROM ubuntu:latest AS build
-
-RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk \
-    maven \
-    wget \
-    && apt-get clean
-
+FROM maven as build
 WORKDIR /app
+
 
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn clean install
+RUN mvn clean package
 
-FROM ubuntu:latest
 
-RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk \
-    && apt-get clean
+FROM openjdk:17
 
 WORKDIR /app
 
-COPY --from=build /app/target/Calculator-1.0-SNAPSHOT.jar .
+COPY --from=build /app/target/calculator-1.0-SNAPSHOT.jar .
 
-CMD ["java", "-jar", "app/Calculator-1.0-SNAPSHOT.jar", "org.calculator.ScientificCalculator"]
+CMD ["java", "-jar", "/app/calculator-1.0-SNAPSHOT.jar", "org.calculator.ScientificCalculator"]
