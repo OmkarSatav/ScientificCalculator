@@ -23,4 +23,4 @@ WORKDIR /app
 
 COPY --from=build /app/target/Calculator-1.0-SNAPSHOT.jar .
 
-CMD ["java", "-jar", "Calculator-1.0-SNAPSHOT.jar", "org.calculator.ScientificCalculator"]
+CMD ["java", "-jar", "Calculator-1.0-SNAPSHOT.jar"]
