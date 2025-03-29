@@ -12,6 +12,6 @@ FROM openjdk:17
 
 WORKDIR /app
 
-COPY --from=build /app/target/calculator-1.0-SNAPSHOT.jar .
+COPY --from=build /app/target/Calculator-1.0-SNAPSHOT.jar .
 
-CMD ["java", "-jar", "/app/calculator-1.0-SNAPSHOT.jar", "org.calculator.ScientificCalculator"]
+CMD ["java", "-jar", "/app/Calculator-1.0-SNAPSHOT.jar", "org.calculator.ScientificCalculator"]
