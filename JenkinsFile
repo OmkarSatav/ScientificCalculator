@@ -67,22 +67,6 @@ pipeline {
     }
 
     post {
-//         success {
-//             emailext(
-//                 to: 'omkarsatav2021.comp@mmcoe.edu.in',
-//                 subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-//                 body: """<p>Your build and deployment have been <strong>successful</strong>!</p>
-//                          <p>Click the following link to view the build details: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>"""
-//             )
-//         }
-//         failure {
-//             emailext(
-//                 to: 'omkarsatav2021.comp@mmcoe.edu.in',
-//                 subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-//                 body: """<p>Unfortunately, the build or deployment <strong>failed</strong>.</p>
-//                          <p>For more details, visit: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>"""
-//             )
-//         }
         always {
             cleanWs()
         }
