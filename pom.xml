@@ -48,7 +48,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.calculator.ScientificCalculator</mainClass>
+                            <mainClass>com.guesture.ScientificCalculator</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
