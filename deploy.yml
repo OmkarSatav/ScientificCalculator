@@ -24,5 +24,4 @@
       ignore_errors: yes
 
     - name: Running container
-      command: docker run -it omkarsatav/scientific_calculator java -jar Calculator-1.0-SNAPSHOT.jar com.guesture.ScientificCalculator
-
+      command: docker run -it -d --name scientific_calculator omkarsatav/scientific_calculator
