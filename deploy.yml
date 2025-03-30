@@ -6,7 +6,7 @@
   tasks:
     - name: Pull Docker Image from Docker Hub
       docker_image:
-        name: "omkarsatav/scientific_calculator"
+        name: "omkarsatav/calculator:latest"
         source: pull
       register: docker_pull_result
 
