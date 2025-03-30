@@ -24,4 +24,4 @@
       ignore_errors: yes
 
     - name: Running container
-      command: docker run -it -d --name scientific_calculator omkarsatav/scientific_calculator
+      command: docker run -it -d --name scientific_calculator omkarsatav/calculator:latest
