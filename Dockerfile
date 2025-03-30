@@ -21,6 +21,6 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY --from=build /app/target/Calculator-1.0-SNAPSHOT.jar .
+COPY --from=build /app/target/Calculator-1.0-SNAPSHOT.jar app.jar
 
-CMD ["java", "-jar", "Calculator-1.0-SNAPSHOT.jar", "org.calculator.ScientificCalculator"]
+CMD ["java", "-jar", "app.jar"]
